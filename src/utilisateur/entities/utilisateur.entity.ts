@@ -1,5 +1,6 @@
+import { Avis } from 'src/avis/entities/avi.entity';
 import { Tableau } from 'src/tableau/entities/tableau.entity';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('utilisateur')
 export class Utilisateur {
@@ -21,5 +22,10 @@ export class Utilisateur {
   @Column({ type: 'boolean' })
   administrateur: boolean;
 
+  @OneToMany(() => Avis, (avis) => avis.utilisateur)
+  avis: Avis[];
 
+  @ManyToMany(() => Tableau)
+  @JoinTable()
+  favoris: Tableau[];
 }

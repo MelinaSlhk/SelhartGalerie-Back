@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { Utilisateur } from './utilisateur/entities/utilisateur.entity';
 import { ImageModule } from './image/image.module';
 import { TableauModule } from './tableau/tableau.module';
+import { AvisModule } from './avis/avis.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { TableauModule } from './tableau/tableau.module';
     AuthModule,
     ImageModule,
     TableauModule,
+    AvisModule,
   ],
   controllers: [AppController],
   providers: [AppService],
