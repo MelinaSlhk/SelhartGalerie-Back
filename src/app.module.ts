@@ -9,6 +9,9 @@ import { Utilisateur } from './utilisateur/entities/utilisateur.entity';
 import { ImageModule } from './image/image.module';
 import { TableauModule } from './tableau/tableau.module';
 import { AvisModule } from './avis/avis.module';
+import { Avis } from './avis/entities/avi.entity';
+import { Tableau } from './tableau/entities/tableau.entity';
+import { Image } from './image/entities/image.entity';
 
 @Module({
   imports: [
@@ -23,7 +26,7 @@ import { AvisModule } from './avis/avis.module';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DATABASE,
-      entities: [Utilisateur],
+      entities: [Utilisateur, Image, Tableau, Avis],
       synchronize: false,
       // "synchronize" doit rester sur false. Lorsqu'il est activé (true), TypeORM essaiera d'ajuster automatiquement les tables
       // dans la base de données en fonction de vos entités. Cela pourrait entraîner des changements non désirés.

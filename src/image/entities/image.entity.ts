@@ -6,13 +6,13 @@ export class Image {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ length: 255 })
+  @Column({ type: 'varchar', length: 255 })
   nom: string;
 
-  @Column({ length: 255 })
+  @Column({ type: 'varchar', length: 255 })
   description: string;
 
-  @Column({ length: 255 })
+  @Column({ type: 'varchar', length: 255 })
   typemime: string;
 
   @OneToMany(() => Tableau, (tableau) => tableau.image)

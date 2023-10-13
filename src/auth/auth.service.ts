@@ -25,18 +25,18 @@ export class AuthService {
     private utilisateursRepository: Repository<Utilisateur>,
     private jwtService: JwtService,
   ) {}
-  async register(createAuthDto: CreateAuthDto) {
-    const { nom, prenom, email, mot_de_passe, admin } = createAuthDto;
+  async inscription(createAuthDto: CreateAuthDto) {
+    const { nom, prenom, email, motdepasse, admin } = createAuthDto;
     const salt = await bcrypt.genSalt();
     console.log(salt);
-    const hashedMotDePasse = await bcrypt.hash(mot_de_passe, salt);
-    // console.log(hashedMotDePasse);
+    const hashedmotdepasse = await bcrypt.hash(motdepasse, salt);
+    // console.log(hashedmotdepasse);
 
     const utilisateur = this.utilisateursRepository.create({
       nom,
       prenom,
       email,
-      mot_de_passe: hashedMotDePasse,
+      motdepasse: hashedmotdepasse,
       // admin: false,
     });
 
@@ -45,12 +45,12 @@ export class AuthService {
   }
 
   async login(loginDto: LoginDto) {
-    const { email, mot_de_passe } = loginDto;
+    const { email, motdepasse } = loginDto;
     const utilisateur = await this.utilisateursRepository.findOneBy({ email });
 
     if (
       utilisateur &&
-      (await bcrypt.compare(mot_de_passe, utilisateur.mot_de_passe))
+      (await bcrypt.compare(motdepasse, utilisateur.motdepasse))
     ) {
       const playload = { email };
       const accessToken = await this.jwtService.sign(playload);
@@ -66,5 +66,3 @@ export class AuthService {
   //   return bcrypt.compare(password, memberPassword);
   // }
 }
-
-
