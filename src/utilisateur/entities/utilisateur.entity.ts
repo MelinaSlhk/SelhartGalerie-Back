@@ -26,8 +26,8 @@ export class Utilisateur {
   @Column({ length: 60 })
   motdepasse: string;
 
-  @Column({ type: 'boolean' })
-  admin: boolean;
+  @Column({ nullable: false })
+  administrateur: boolean;
 
   @OneToMany(() => Avis, (avis) => avis.utilisateur)
   avis: Avis[];

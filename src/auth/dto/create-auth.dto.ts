@@ -3,5 +3,5 @@ export class CreateAuthDto {
   prenom: string;
   email: string;
   motdepasse: string;
-  admin: boolean;
+  administrateur: boolean;
 }

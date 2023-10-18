@@ -26,7 +26,8 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
   async inscription(createAuthDto: CreateAuthDto) {
-    const { nom, prenom, email, motdepasse, admin } = createAuthDto;
+    const { nom, prenom, email, motdepasse, administrateur} =
+      createAuthDto;
     const salt = await bcrypt.genSalt();
     console.log(salt);
     const hashedmotdepasse = await bcrypt.hash(motdepasse, salt);
@@ -37,7 +38,7 @@ export class AuthService {
       prenom,
       email,
       motdepasse: hashedmotdepasse,
-      // admin: false,
+      administrateur: false,
     });
 
     // Enregistrez l'utilisateur dans la base de données
@@ -47,14 +48,14 @@ export class AuthService {
   async login(loginDto: LoginDto) {
     const { email, motdepasse } = loginDto;
     const utilisateur = await this.utilisateursRepository.findOneBy({ email });
-
+    console.log('user',utilisateur)
     if (
       utilisateur &&
       (await bcrypt.compare(motdepasse, utilisateur.motdepasse))
     ) {
       const playload = { email };
       const accessToken = await this.jwtService.sign(playload);
-      return { accessToken };
+      return { accessToken, utilisateur };
     } else {
       throw new UnauthorizedException('Ces identifiants ne sont pas corrects.');
     }
