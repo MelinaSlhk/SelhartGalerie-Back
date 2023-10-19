@@ -32,7 +32,11 @@ export class Utilisateur {
   @OneToMany(() => Avis, (avis) => avis.utilisateur)
   avis: Avis[];
 
-  @ManyToMany(() => Tableau)
-  @JoinTable()
-  favoris: Tableau[];
+  @ManyToMany(() => Tableau, (tableau) => tableau.utilisateur, {eager: true, cascade: true})
+  @JoinTable({name: 'favoris', 
+joinColumn: { name: 'id_utilisateur', 
+referencedColumnName: 'id', },
+inverseJoinColumn: { name: 'id_tableau',
+referencedColumnName: 'id'}})
+  tableau: Tableau[];
 }
