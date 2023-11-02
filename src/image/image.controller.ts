@@ -15,11 +15,6 @@ export class ImageController {
     return this.imageService.create(file);
   }
 
-  @Get()
-  findAll() {
-    return this.imageService.findAll();
-  }
-
   @Get(':id')
   getImageById(
     @Param('id') id: string,
