@@ -1,19 +1,51 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException, StreamableFile } from '@nestjs/common';
 import { CreateImageDto } from './dto/create-image.dto';
 import { UpdateImageDto } from './dto/update-image.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Image } from './entities/image.entity';
+import { createReadStream } from 'fs';
+import { join } from 'path';
 
 @Injectable()
 export class ImageService {
-  create(createImageDto: CreateImageDto) {
-    return 'This action adds a new image';
+  constructor(
+    @InjectRepository(Image) private imagesRepository: Repository<Image>,
+  ) {}
+
+  async getImage(id: number, res): Promise<StreamableFile> {
+    const result = await this.imagesRepository.find();
+    const lastResult = result[result.length - 1];
+
+    const imageFile = createReadStream(
+      join(process.cwd(), 'uploads', lastResult.nom),
+    );
+    console.log(process.cwd());
+
+    res.set('Content-Type', lastResult.typemime);
+
+    return new StreamableFile(imageFile);
+  }
+  create(image: Express.Multer.File) {
+    console.log(image);
+
+    return this.imagesRepository.save({
+      nom: image.filename,
+      description: image.originalname,
+      typemime: image.mimetype,
+    });
   }
 
   findAll() {
     return `This action returns all image`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} image`;
+  async findOne(id: number) {
+    const found = await this.imagesRepository.findOneBy({ id });
+    if (!found) {
+      throw new NotFoundException(`images avec l'id ${id} introuvable`);
+    }
+    return found;
   }
 
   update(id: number, updateImageDto: UpdateImageDto) {

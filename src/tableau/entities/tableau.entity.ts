@@ -17,7 +17,7 @@ export class Tableau {
   @Column()
   id_image: number;
 
-  @ManyToOne(() => Image, (image) => image.tableaux)
+  @ManyToOne(() => Image, (image) => image.tableaux, {eager: true})
   @JoinColumn({ name: 'id_image' })
   image: Image;
 
@@ -30,6 +30,6 @@ joinColumn: { name: 'id_tableau',
 referencedColumnName: 'id', },
 inverseJoinColumn: { name: 'id_utilisateur',
 referencedColumnName: 'id'}})
-  utilisateur: Utilisateur[];
+utilisateur: Utilisateur[];
 }
 
