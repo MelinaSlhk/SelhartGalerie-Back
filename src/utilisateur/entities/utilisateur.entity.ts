@@ -20,7 +20,7 @@ export class Utilisateur {
   @Column({ length: 255 })
   prenom: string;
 
-  @Column({ length: 255, unique: true }) // Utilisation de l'option unique
+  @Column({ length: 255, unique: true })
   email: string;
 
   @Column({ length: 60 })
@@ -38,5 +38,5 @@ joinColumn: { name: 'id_utilisateur',
 referencedColumnName: 'id', },
 inverseJoinColumn: { name: 'id_tableau',
 referencedColumnName: 'id'}})
-  tableau: Tableau[];
+  tableauxFavoris: Tableau[];
 }

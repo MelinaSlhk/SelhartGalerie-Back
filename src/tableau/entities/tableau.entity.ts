@@ -24,7 +24,7 @@ export class Tableau {
   @OneToMany(() => Avis, (avis) => avis.tableau)
   avis: Avis[];
 
-  @ManyToMany(() => Utilisateur, (utilisateur) => utilisateur.tableau)
+  @ManyToMany(() => Utilisateur, (utilisateur) => utilisateur.tableauxFavoris)
   @JoinTable({name: 'favoris', 
 joinColumn: { name: 'id_tableau', 
 referencedColumnName: 'id', },
