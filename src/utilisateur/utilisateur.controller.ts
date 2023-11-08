@@ -36,7 +36,11 @@ export class UtilisateurController {
     return this.utilisateurService.remove(+id);
   }
 }
-  
+  // @Patch('/tableau/favoris/:id')
+  // addFavori(@Param('id') id: string, @Body('tableauId') tableauId: number) {
+  //   return this.utilisateurService.update(+id, tableauId);
+  // }
+
   // @Post('/tableau/favoris/:id')
   // async addFavori(
   //   @Param('id') utilisateurId: number,
