@@ -11,6 +11,9 @@ import {
 import { UtilisateurService } from './utilisateur.service';
 import { CreateUtilisateurDto } from './dto/create-utilisateur.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { UpdateUtilisateurDto } from './dto/update-utilisateur.dto';
+import { Utilisateur } from './entities/utilisateur.entity';
+import { GetUtilisateur } from 'src/auth/get-user.decorator';
 
 @Controller('utilisateur')
 export class UtilisateurController {
@@ -33,15 +36,15 @@ export class UtilisateurController {
 
   // voir si j ai le temps de faire la mise à jour d un user
 
-  // @Patch(':id')
-  // @UseGuards(AuthGuard('jwt'))
-  // update(
-  //   @Param('id') id: string,
-  //   @Body() updateUtilisateurDto: UpdateUtilisateurDto,
-  //   @GetUtilisateur() utilisateur: Utilisateur,
-  // ) {
-  //   return this.utilisateurService.update(+id, updateUtilisateurDto);
-  // }
+  @Patch(':id')
+  @UseGuards(AuthGuard('jwt'))
+  update(
+    @Param('id') id: string,
+    @Body() updateUtilisateurDto: UpdateUtilisateurDto,
+    @GetUtilisateur() utilisateur: Utilisateur,
+  ) {
+    return this.utilisateurService.update(+id, updateUtilisateurDto);
+  }
 
 
   @Delete(':id')
