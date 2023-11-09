@@ -21,7 +21,7 @@ export class Tableau {
   @JoinColumn({ name: 'id_image' })
   image: Image;
 
-  @OneToMany(() => Avis, (avis) => avis.tableau)
+  @OneToMany(() => Avis, (avis) => avis.tableau, { onDelete : 'CASCADE'})
   avis: Avis[];
 
   @ManyToMany(() => Utilisateur, (utilisateur) => utilisateur.tableauxFavoris)

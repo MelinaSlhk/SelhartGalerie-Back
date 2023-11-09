@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateAviDto } from './dto/create-avi.dto';
 import { UpdateAviDto } from './dto/update-avi.dto';
 import { Utilisateur } from 'src/utilisateur/entities/utilisateur.entity';
@@ -13,9 +13,8 @@ export class AvisService {
     @InjectRepository(Avis)
     private avisRepository: Repository<Avis>,
     @InjectRepository(Tableau)
-    private tableauRespository: Repository<Tableau>,
-  ) // @InjectRepository(Utilisateur) private utilisateurRepository: Repository<Utilisateur>,
-  {}
+    private tableauRespository: Repository<Tableau>, // @InjectRepository(Utilisateur) private utilisateurRepository: Repository<Utilisateur>,
+  ) {}
   async create(
     createAviDto: CreateAviDto,
     id_utilisateur: Utilisateur,
@@ -31,18 +30,17 @@ export class AvisService {
     //     message: `Tableau avec l'ID ${id_tableau} non trouvé.`,
     //   };
     // }
-      // Crée un nouvel avis.
-      const newAvis = new Avis();
-      newAvis.avis = createAviDto.avis;
-      newAvis.utilisateur = id_utilisateur;
-      newAvis.tableau = tableau;
+    // Crée un nouvel avis.
+    const newAvis = new Avis();
+    newAvis.avis = createAviDto.avis;
+    newAvis.utilisateur = id_utilisateur;
+    newAvis.tableau = tableau;
 
-      // Sauvegarde la nouvelle review.
-      const createdAvis = await this.avisRepository.save(newAvis);
+    // Sauvegarde la nouvelle review.
+    const createdAvis = await this.avisRepository.save(newAvis);
 
-      return createdAvis
-    }
-
+    return createdAvis;
+  }
 
   async findAllByTableauId(id: number) {
     const avis = await this.avisRepository.find({
@@ -86,8 +84,16 @@ export class AvisService {
     return `This action updates a #${id} avi`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} avi`;
+  async remove(id: number) {
+    const result = await this.avisRepository.delete(id);
+    if (result.affected === 0) {
+      throw new NotFoundException("Cette review n'existe pas !");
+    }
+    return {
+      status: 'success',
+      message: `La review avec l'id ${id} a été supprimée avec succès.`,
+    };
   }
+  
 }
   

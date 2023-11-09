@@ -41,10 +41,12 @@ export class TableauService {
 
   async remove(id: number) {
      const found = await this.findOne(id);
+     console.log('coucou1');
      await this.tableauxRepository.remove(found);
+     console.log('coucou2');
      const reponse = {
-      test: `Le tableau avec l'identifiant : ${id} a été supprimée`
-     }
+       test: `Le tableau avec l'identifiant : ${id} a été supprimée`
+      }
      return reponse;
   }
 }
