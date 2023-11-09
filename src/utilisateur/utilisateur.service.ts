@@ -11,7 +11,7 @@ export class UtilisateurService {
   constructor(
     @InjectRepository(Utilisateur)
     private utilisateursRepository: Repository<Utilisateur>,
-    @InjectRepository(Tableau) // Injection du repository de la classe Tableau
+    @InjectRepository(Tableau) 
     private readonly tableauRepository: Repository<Tableau>,
   ) {}
 
@@ -21,11 +21,10 @@ export class UtilisateurService {
     const createdUtilisateur =
       await this.utilisateursRepository.save(newUtilisateur);
     return createdUtilisateur;
-    // await return 'This action adds a new utilisateur';
   }
 
   findAll() {
-    return this.utilisateursRepository.find(); //`This action returns all utilisateur`;
+    return this.utilisateursRepository.find(); 
   }
 
   async findOne(id: number) {
@@ -44,44 +43,25 @@ export class UtilisateurService {
       utilisateur.tableauxFavoris = updateUtilisateurDto.tableauFavoris;
     }
 
-    const updatedUtilisateur = this.utilisateursRepository.merge(utilisateur, updateUtilisateurDto);
+    const updatedUtilisateur = this.utilisateursRepository.merge(
+      utilisateur,
+      updateUtilisateurDto,
+    );
 
     const result = await this.utilisateursRepository.save(updatedUtilisateur);
     return result;
   }
-  
-  remove(id: number) {
-    return `This action removes a #${id} utilisateur`;
+
+  async remove(id: number) {
+    const utilisateurAsupprimer = await this.findOne(id);
+    const result = await this.utilisateursRepository.remove(
+      utilisateurAsupprimer,
+    );
+    if (!result) {
+      throw new NotFoundException(
+        `Le membre ${utilisateurAsupprimer.prenom} n'a pas été trouver`,
+      );
+    }
   }
 }
-  // async addFavori(utilisateurId: number, tableauId: number) {
-  //   const utilisateur = await this.utilisateursRepository.findOne({
-  //     where: { id: utilisateurId },
-  //     relations: ['tableauxFavoris'],
-  //   });
-
-  //   if (!utilisateur) {
-  //     throw new Error('Utilisateur non trouvé');
-  //   }
-  //   const tableauIndex = utilisateur.tableauxFavoris.findIndex(
-  //     (tableau) => tableau.id === tableauId,
-  //   );
-
-  //   if (tableauIndex !== -1) {
-      // Le tableau est déjà dans les favoris, supprimez-le
-    //   utilisateur.tableauxFavoris.splice(tableauIndex, 1);
-    // } else {
-      // Le tableau n'est pas dans les favoris, ajoutez-le
-  //     const tableau = await this.tableauRepository.findOne({
-  //       where: { id: tableauId },
-  //     });
-  //     if (!tableau) {
-  //       throw new Error('Tableau non trouvé');
-  //     }
-  //     utilisateur.tableauxFavoris.push(tableau);
-  //   }
-
-  //   return this.utilisateursRepository.save(utilisateur);
-  // }
-
-    
+ 

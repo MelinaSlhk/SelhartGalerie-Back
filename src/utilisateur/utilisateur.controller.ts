@@ -1,9 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
-import { Utilisateur } from './entities/utilisateur.entity';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { UtilisateurService } from './utilisateur.service';
 import { CreateUtilisateurDto } from './dto/create-utilisateur.dto';
-import { UpdateUtilisateurDto } from './dto/update-utilisateur.dto';
-import { GetUtilisateur } from 'src/auth/get-user.decorator';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('utilisateur')
 export class UtilisateurController {
@@ -24,29 +31,22 @@ export class UtilisateurController {
     return this.utilisateurService.findOne(+id);
   }
 
-  @Patch(':id')
-  // @UseGuards(JwtAuthGuard)
-  update(@Param('id') id: string, @Body() updateUtilisateurDto: UpdateUtilisateurDto, @GetUtilisateur() utilisateur: Utilisateur) {
-    return this.utilisateurService.update(+id, updateUtilisateurDto);
-  }
+  // voir si j ai le temps de faire la mise à jour d un user
+
+  // @Patch(':id')
+  // @UseGuards(AuthGuard('jwt'))
+  // update(
+  //   @Param('id') id: string,
+  //   @Body() updateUtilisateurDto: UpdateUtilisateurDto,
+  //   @GetUtilisateur() utilisateur: Utilisateur,
+  // ) {
+  //   return this.utilisateurService.update(+id, updateUtilisateurDto);
+  // }
 
 
   @Delete(':id')
+  @UseGuards(AuthGuard('jwt'))
   remove(@Param('id') id: string) {
     return this.utilisateurService.remove(+id);
   }
 }
-  // @Patch('/tableau/favoris/:id')
-  // addFavori(@Param('id') id: string, @Body('tableauId') tableauId: number) {
-  //   return this.utilisateurService.update(+id, tableauId);
-  // }
-
-  // @Post('/tableau/favoris/:id')
-  // async addFavori(
-  //   @Param('id') utilisateurId: number,
-  //   @Body() { tableauId }: { tableauId: number },
-  // ) {
-  //   await this.utilisateurService.update(utilisateurId, tableauId);
-  // }
-// }
-

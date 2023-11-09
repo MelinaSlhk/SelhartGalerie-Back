@@ -1,7 +1,5 @@
 import {
-  ConflictException,
   Injectable,
-  InternalServerErrorException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto';
@@ -12,12 +10,7 @@ import { Utilisateur } from 'src/utilisateur/entities/utilisateur.entity';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 
-// @Injectable()
-// export class AuthService {
-//   register(createAuthDto: CreateAuthDto) {
-//     return 'This action adds a new auth';
-//   }
-// }
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -60,10 +53,4 @@ export class AuthService {
       throw new UnauthorizedException('Ces identifiants ne sont pas corrects.');
     }
   }
-  // async comparePasswords(
-  //   password: string,
-  //   memberPassword: string,
-  // ): Promise<boolean> {
-  //   return bcrypt.compare(password, memberPassword);
-  // }
 }

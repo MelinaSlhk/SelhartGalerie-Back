@@ -1,5 +1,4 @@
 import { Injectable, NotFoundException, StreamableFile } from '@nestjs/common';
-import { CreateImageDto } from './dto/create-image.dto';
 import { UpdateImageDto } from './dto/update-image.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';

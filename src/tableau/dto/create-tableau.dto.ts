@@ -1,5 +1,4 @@
 import { IsNotEmpty, IsString } from "class-validator";
-import { Image } from "src/image/entities/image.entity";
 
 export class CreateTableauDto {
   // liste propriété de la table et type

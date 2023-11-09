@@ -13,7 +13,7 @@ export class AvisService {
     @InjectRepository(Avis)
     private avisRepository: Repository<Avis>,
     @InjectRepository(Tableau)
-    private tableauRespository: Repository<Tableau>, // @InjectRepository(Utilisateur) private utilisateurRepository: Repository<Utilisateur>,
+    private tableauRespository: Repository<Tableau>, 
   ) {}
   async create(
     createAviDto: CreateAviDto,
@@ -24,12 +24,7 @@ export class AvisService {
     const tableau = await this.tableauRespository.findOne({
       where: { id: id_tableau },
     });
-    // if (!tableau) {
-    //   return {
-    //     status: 'error',
-    //     message: `Tableau avec l'ID ${id_tableau} non trouvé.`,
-    //   };
-    // }
+   
     // Crée un nouvel avis.
     const newAvis = new Avis();
     newAvis.avis = createAviDto.avis;
@@ -76,10 +71,7 @@ export class AvisService {
     return await this.avisRepository.find();
   }
 
-  // findOne(id: number) {
-  //   return `This action returns a #${id} avi`;
-  // }
-
+  
   update(id: number, updateAviDto: UpdateAviDto) {
     return `This action updates a #${id} avi`;
   }
