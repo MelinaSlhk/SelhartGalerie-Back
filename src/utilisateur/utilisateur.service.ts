@@ -16,50 +16,80 @@ export class UtilisateurService {
   ) {}
 
   async create(createUtilisateurDto: CreateUtilisateurDto) {
-    const newUtilisateur =
-      this.utilisateursRepository.create(createUtilisateurDto);
-    const createdUtilisateur =
-      await this.utilisateursRepository.save(newUtilisateur);
-    return createdUtilisateur;
+     try {
+       const newUtilisateur =
+         this.utilisateursRepository.create(createUtilisateurDto);
+       const createdUtilisateur =
+         await this.utilisateursRepository.save(newUtilisateur);
+       return createdUtilisateur;
+     } catch (error) {
+       throw new Error(
+         `Erreur lors de la création de l'utilisateur : ${error.message}`,
+       );
+     }
   }
 
   findAll() {
-    return this.utilisateursRepository.find(); 
+    try {
+      return this.utilisateursRepository.find();
+    } catch (error) {
+      throw new Error(
+        `Erreur lors de la récupération de tous les utilisateurs : ${error.message}`,
+      );
+    }
   }
 
   async findOne(id: number) {
-    const utilisateur = await this.utilisateursRepository.findOneBy({ id });
-    if (!utilisateur) {
-      throw new NotFoundException(`Utilisateur avec l'id ${id} introuvable`);
+    try {
+      const utilisateur = await this.utilisateursRepository.findOneBy({ id });
+      if (!utilisateur) {
+        throw new NotFoundException(`Utilisateur avec l'id ${id} introuvable`);
+      }
+      return utilisateur;
+    } catch (error) {
+      throw new Error(
+        `Erreur lors de la récupération de l'utilisateur : ${error.message}`,
+      );
     }
-    return utilisateur;
   }
 
   async update(id: number, updateUtilisateurDto: UpdateUtilisateurDto) {
-    const utilisateur = await this.findOne(id);
+    try {
+      const utilisateur = await this.findOne(id);
 
-    //mise à jour des tableaux favoris
-    if (utilisateur.tableauxFavoris) {
-      utilisateur.tableauxFavoris = updateUtilisateurDto.tableauFavoris;
+      //mise à jour des tableaux favoris
+      if (utilisateur.tableauxFavoris) {
+        utilisateur.tableauxFavoris = updateUtilisateurDto.tableauFavoris;
+      }
+
+      const updatedUtilisateur = this.utilisateursRepository.merge(
+        utilisateur,
+        updateUtilisateurDto,
+      );
+
+      const result = await this.utilisateursRepository.save(updatedUtilisateur);
+      return result;
+    } catch (error) {
+      throw new Error(
+        `Erreur lors de la mise à jour de l'utilisateur : ${error.message}`,
+      );
     }
-
-    const updatedUtilisateur = this.utilisateursRepository.merge(
-      utilisateur,
-      updateUtilisateurDto,
-    );
-
-    const result = await this.utilisateursRepository.save(updatedUtilisateur);
-    return result;
   }
 
   async remove(id: number) {
-    const utilisateurAsupprimer = await this.findOne(id);
-    const result = await this.utilisateursRepository.remove(
-      utilisateurAsupprimer,
-    );
-    if (!result) {
-      throw new NotFoundException(
-        `Le membre ${utilisateurAsupprimer.prenom} n'a pas été trouver`,
+    try {
+      const utilisateurAsupprimer = await this.findOne(id);
+      const result = await this.utilisateursRepository.remove(
+        utilisateurAsupprimer,
+      );
+      if (!result) {
+        throw new NotFoundException(
+          `Le membre ${utilisateurAsupprimer.prenom} n'a pas été trouver`,
+        );
+      }
+    } catch (error) {
+      throw new Error(
+        `Erreur lors de la suppression de l'utilisateur : ${error.message}`,
       );
     }
   }

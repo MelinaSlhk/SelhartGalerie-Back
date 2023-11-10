@@ -20,71 +20,101 @@ export class AvisService {
     id_utilisateur: Utilisateur,
     id_tableau: number,
   ): Promise<Avis> {
-    // Recherche le tableau associé à l'ID donné
-    const tableau = await this.tableauRespository.findOne({
-      where: { id: id_tableau },
-    });
-   
-    // Crée un nouvel avis.
-    const newAvis = new Avis();
-    newAvis.avis = createAviDto.avis;
-    newAvis.utilisateur = id_utilisateur;
-    newAvis.tableau = tableau;
+    try {
+      // Recherche le tableau associé à l'ID donné
+      const tableau = await this.tableauRespository.findOne({
+        where: { id: id_tableau },
+      });
 
-    // Sauvegarde la nouvelle review.
-    const createdAvis = await this.avisRepository.save(newAvis);
+      // Crée un nouvel avis.
+      const newAvis = new Avis();
+      newAvis.avis = createAviDto.avis;
+      newAvis.utilisateur = id_utilisateur;
+      newAvis.tableau = tableau;
 
-    return createdAvis;
+      // Sauvegarde la nouvelle review.
+      const createdAvis = await this.avisRepository.save(newAvis);
+
+      return createdAvis;
+    } catch (error) {
+      throw new Error(
+        `Erreur lors de la création de l'avis : ${error.message}`,
+      );
+    }
   }
 
   async findAllByTableauId(id: number) {
-    const avis = await this.avisRepository.find({
-      where: { tableau: { id: id } },
-      relations: ['utilisateur'],
-    });
+    try {
+      const avis = await this.avisRepository.find({
+        where: { tableau: { id: id } },
+        relations: ['utilisateur'],
+      });
 
-    if (avis.length === 0) {
+      if (avis.length === 0) {
+        return {
+          status: 'success',
+          message: `Aucun avis n'a été trouvée pour le tableau avec l'id ${id}.`,
+          data: [],
+        };
+      }
+      // Boucle for pour effacer les données de nos utilisateurs
+      avis.forEach((avis) => {
+        if (avis.utilisateur) {
+          delete avis.utilisateur.email;
+          delete avis.utilisateur.nom;
+          delete avis.utilisateur.prenom;
+          delete avis.utilisateur.motdepasse;
+        }
+      });
+
       return {
         status: 'success',
-        message: `Aucun avis n'a été trouvée pour le tableau avec l'id ${id}.`,
-        data: [],
+        message: `Les avis pour le tableauavec l'id ${id} ont été trouvées.`,
+        data: avis,
       };
+    } catch (error) {
+      throw new Error(
+        `Erreur lors de la récupération des avis : ${error.message}`,
+      );
     }
-    // Boucle for pour effacer les données de nos utilisateurs
-    avis.forEach((avis) => {
-      if (avis.utilisateur) {
-        delete avis.utilisateur.email;
-        delete avis.utilisateur.nom;
-        delete avis.utilisateur.prenom;
-        delete avis.utilisateur.motdepasse;
-      }
-    });
-
-    return {
-      status: 'success',
-      message: `Les avis pour le tableauavec l'id ${id} ont été trouvées.`,
-      data: avis,
-    };
   }
 
   async findAll() {
-    return await this.avisRepository.find();
+    try {
+      return await this.avisRepository.find();
+    } catch (error) {
+      throw new Error(
+        `Erreur lors de la récupération de tous les avis : ${error.message}`,
+      );
+    }
   }
 
   
   update(id: number, updateAviDto: UpdateAviDto) {
-    return `This action updates a #${id} avi`;
+    try {
+      return `This action updates a #${id} avi`;
+    } catch (error) {
+      throw new Error(
+        `Erreur lors de la mise à jour de l'avis : ${error.message}`,
+      );
+    }
   }
 
   async remove(id: number) {
-    const result = await this.avisRepository.delete(id);
-    if (result.affected === 0) {
-      throw new NotFoundException("Cette review n'existe pas !");
+    try {
+      const result = await this.avisRepository.delete(id);
+      if (result.affected === 0) {
+        throw new NotFoundException("Cette review n'existe pas !");
+      }
+      return {
+        status: 'success',
+        message: `La review avec l'id ${id} a été supprimée avec succès.`,
+      };
+    } catch (error) {
+      throw new Error(
+        `Erreur lors de la suppression de l'avis : ${error.message}`,
+      );
     }
-    return {
-      status: 'success',
-      message: `La review avec l'id ${id} a été supprimée avec succès.`,
-    };
   }
   
 }

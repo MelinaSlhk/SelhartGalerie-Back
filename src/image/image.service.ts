@@ -13,24 +13,37 @@ export class ImageService {
   ) {}
 
   async getImage(id: number, res): Promise<StreamableFile> {
-    const result = await this.imagesRepository.findOneBy({id});    
-    const imageFile = createReadStream(
-      join(process.cwd(), 'uploads', result.nom),
-    );
-    console.log(process.cwd());
+    try {
+      const result = await this.imagesRepository.findOneBy({ id });
+      const imageFile = createReadStream(
+        join(process.cwd(), 'uploads', result.nom),
+      );
+      console.log(process.cwd());
 
-    res.set('Content-Type', result.typemime);
+      res.set('Content-Type', result.typemime);
 
-    return new StreamableFile(imageFile);
+      return new StreamableFile(imageFile);
+    } catch (error) {
+      throw new Error(
+        `Erreur lors de la récupération de l'image : ${error.message}`,
+      );
+    }
   }
-  create(image: Express.Multer.File) {
-    console.log(image);
 
-    return this.imagesRepository.save({
-      nom: image.filename,
-      description: image.originalname,
-      typemime: image.mimetype,
-    });
+  create(image: Express.Multer.File) {
+    try {
+      console.log(image);
+
+      return this.imagesRepository.save({
+        nom: image.filename,
+        description: image.originalname,
+        typemime: image.mimetype,
+      });
+    } catch (error) {
+      throw new Error(
+        `Erreur lors de la création de l'image : ${error.message}`,
+      );
+    }
   }
 
   findAll() {
@@ -38,11 +51,17 @@ export class ImageService {
   }
 
   async findOne(id: number) {
-    const found = await this.imagesRepository.findOneBy({ id });
-    if (!found) {
-      throw new NotFoundException(`images avec l'id ${id} introuvable`);
+    try {
+      const found = await this.imagesRepository.findOneBy({ id });
+      if (!found) {
+        throw new NotFoundException(`images avec l'id ${id} introuvable`);
+      }
+      return found;
+    } catch (error) {
+      throw new Error(
+        `Erreur lors de la récupération de l'image : ${error.message}`,
+      );
     }
-    return found;
   }
 
   update(id: number, updateImageDto: UpdateImageDto) {
